@@ -1,0 +1,10 @@
+*.iml
+.idea
+dependency-reduced-pom.xml
+# Project exclude paths
+/transfer-bukkit/target/
+/transfer-bungee/target/
+/transfer-common/target/
+/serverlinker-bukkit/target/
+/serverlinker-bungee/target/
+/serverlinker-common/target/

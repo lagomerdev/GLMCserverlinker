@@ -1,0 +1,6 @@
+main: ${project.parent.groupId}.serverlinker.bukkit.${project.name}
+name: ${project.parent.name}
+version: ${project.version}
+api-version: 1.16
+description: GLMC Server Linker
+depend: [GLMCapi]

@@ -1,0 +1,4 @@
+main: ${project.parent.groupId}.serverlinker.bungee.${project.name}
+name: ${project.parent.name}
+version: ${project.version}
+depends: [GLMCapi]
