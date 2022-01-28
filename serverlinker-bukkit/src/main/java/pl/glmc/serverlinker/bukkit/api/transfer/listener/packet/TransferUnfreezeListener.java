@@ -16,7 +16,7 @@ public class TransferUnfreezeListener extends PacketListener<TransferUnfreeze> {
         this.plugin = plugin;
         this.transferService = transferService;
 
-        this.plugin.getGlmcApiBukkit().getPacketService().registerListener(this);
+        this.plugin.getGlmcApiBukkit().getPacketService().registerListener(this, this.plugin);
     }
 
     @Override

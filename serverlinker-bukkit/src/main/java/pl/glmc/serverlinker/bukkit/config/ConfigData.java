@@ -4,18 +4,12 @@ import java.util.List;
 
 public class ConfigData {
 
-    private final String serverId;
     private final List<String> blacklistedTransferTags, optionalTransferTags, backupIgnoredTags;
 
-    public ConfigData(String serverId, List<String> blacklistedTransferTags, List<String> optionalTransferTags, List<String> backupIgnoredTags) {
-        this.serverId = serverId;
+    public ConfigData(List<String> blacklistedTransferTags, List<String> optionalTransferTags, List<String> backupIgnoredTags) {
         this.blacklistedTransferTags = blacklistedTransferTags;
         this.optionalTransferTags = optionalTransferTags;
         this.backupIgnoredTags = backupIgnoredTags;
-    }
-
-    public String getServerId() {
-        return serverId;
     }
 
     public List<String> getBlacklistedTransferTags() {

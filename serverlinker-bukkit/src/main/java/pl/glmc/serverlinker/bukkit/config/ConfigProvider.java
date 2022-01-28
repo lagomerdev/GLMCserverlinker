@@ -44,10 +44,11 @@ public class ConfigProvider {
         final String database = this.plugin.getConfig().getString("connections.mysql.database");
         final String username = this.plugin.getConfig().getString("connections.mysql.user");
         final String password = this.plugin.getConfig().getString("connections.mysql.password");
+        final String poolName = this.plugin.getConfig().getString("connections.mysql.pool_name");
         final int port = this.plugin.getConfig().getInt("connections.mysql.port");
         final int maxPoolSize = this.plugin.getConfig().getInt("connections.mysql.max_pool_size");
 
-        this.databaseConfig = new DatabaseConfig(host, database, username, password, port, maxPoolSize);
+        this.databaseConfig = new DatabaseConfig(host, database, username, password, poolName, port, maxPoolSize);
     }
 
     private void loadRedisConfig() {
@@ -60,12 +61,11 @@ public class ConfigProvider {
     }
 
     private void loadConfig() {
-        final String serverId = this.plugin.getConfig().getString("server_id");
         final List<String> blacklistedTransferTags = this.plugin.getConfig().getStringList("blacklisted_transfer_tags");
         final List<String> optionalTransferTags = this.plugin.getConfig().getStringList("optional_transfer_tags");
         final List<String> backupIgnoredTags = this.plugin.getConfig().getStringList("backup_ignored_tags");
 
-        this.configData = new ConfigData(serverId, blacklistedTransferTags, optionalTransferTags, backupIgnoredTags);
+        this.configData = new ConfigData(blacklistedTransferTags, optionalTransferTags, backupIgnoredTags);
     }
 
     public ConfigData getConfigData() {

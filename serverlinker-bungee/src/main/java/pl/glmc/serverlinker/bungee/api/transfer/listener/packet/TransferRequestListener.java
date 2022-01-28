@@ -1,6 +1,7 @@
 package pl.glmc.serverlinker.bungee.api.transfer.listener.packet;
 
 import pl.glmc.api.common.packet.listener.PacketListener;
+import pl.glmc.serverlinker.api.common.TransferMetaData;
 import pl.glmc.serverlinker.bungee.GlmcServerLinkerBungee;
 import pl.glmc.serverlinker.bungee.api.transfer.ApiTransferService;
 import pl.glmc.serverlinker.common.LocalPacketRegistry;
@@ -17,12 +18,13 @@ public class TransferRequestListener extends PacketListener<TransferRequest> {
         this.plugin = plugin;
         this.transferService = transferService;
 
-        this.plugin.getGlmcApiBungee().getPacketService().registerListener(this);
+        this.plugin.getGlmcApiBungee().getPacketService().registerListener(this, this.plugin);
     }
 
     @Override
     public void received(TransferRequest transferRequest) {
-        this.transferService.transferPlayer(transferRequest.getPlayerUniqueId(), transferRequest.getServerTarget(), transferRequest.getTransferReason(), transferRequest.isForce())
+        this.transferService.transferPlayer(transferRequest.getPlayerUniqueId(), transferRequest.getServerTarget(),
+                transferRequest.getTransferMetaData(), transferRequest.getTransferReason(), transferRequest.isForce())
                 .thenAccept(transferResult -> {
                     boolean success = true;
 

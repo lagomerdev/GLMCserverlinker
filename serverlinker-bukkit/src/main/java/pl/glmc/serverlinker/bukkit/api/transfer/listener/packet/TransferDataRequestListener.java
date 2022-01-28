@@ -28,7 +28,7 @@ public class TransferDataRequestListener extends PacketListener<TransferDataRequ
         this.plugin = plugin;
         this.transferService = transferService;
 
-        this.plugin.getGlmcApiBukkit().getPacketService().registerListener(this);
+        this.plugin.getGlmcApiBukkit().getPacketService().registerListener(this, this.plugin);
     }
 
     @Override

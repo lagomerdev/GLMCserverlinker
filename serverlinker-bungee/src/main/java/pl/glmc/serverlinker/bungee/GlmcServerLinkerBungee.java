@@ -1,13 +1,12 @@
 package pl.glmc.serverlinker.bungee;
 
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import pl.glmc.api.bungee.GlmcApiBungee;
 import pl.glmc.api.bungee.GlmcApiBungeeProvider;
 import pl.glmc.api.bungee.database.DatabaseProvider;
-import pl.glmc.serverlinker.api.common.TransferAPI;
 import pl.glmc.serverlinker.bungee.api.GlmcTransferProvider;
+import pl.glmc.serverlinker.bungee.cmd.ServerConfig;
 import pl.glmc.serverlinker.bungee.conifg.ConfigProvider;
 
 public class GlmcServerLinkerBungee extends Plugin {
@@ -34,12 +33,13 @@ public class GlmcServerLinkerBungee extends Plugin {
 
         this.glmcTransferProvider = new GlmcTransferProvider(this);
 
-        ProxiedPlayer player = this.getProxy().getPlayer("lagomer");
-        this.glmcTransferProvider.getTransferService().transferPlayer(player.getUniqueId(), "old", TransferAPI.TransferReason.SERVER_TRANSFER, true);
+        ServerConfig serverCommand = new ServerConfig(this);
     }
 
     @Override
     public void onDisable() {
+        this.glmcApiBungee.unload(this);
+
         this.databaseProvider.unload();
     }
 
@@ -53,5 +53,9 @@ public class GlmcServerLinkerBungee extends Plugin {
 
     public DatabaseProvider getDatabaseProvider() {
         return databaseProvider;
+    }
+
+    public GlmcTransferProvider getGlmcTransferProvider() {
+        return glmcTransferProvider;
     }
 }

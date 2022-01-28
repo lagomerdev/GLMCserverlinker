@@ -1,5 +1,6 @@
 package pl.glmc.serverlinker.bukkit;
 
+import com.google.gson.Gson;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 import pl.glmc.api.bukkit.GlmcApiBukkit;
@@ -9,14 +10,13 @@ import pl.glmc.serverlinker.bukkit.api.GlmcTransferProvider;
 import pl.glmc.serverlinker.bukkit.config.ConfigData;
 import pl.glmc.serverlinker.bukkit.config.ConfigProvider;
 
-import java.io.File;
-
 public class GlmcServerLinkerBukkit extends JavaPlugin {
 
     private GlmcTransferProvider glmcTransferProvider;
     private GlmcApiBukkit glmcApiBukkit;
 
     private String rootDirectory;
+    private Gson gson;
 
     private ConfigProvider configProvider;
     private DatabaseProvider databaseProvider;
@@ -27,6 +27,8 @@ public class GlmcServerLinkerBukkit extends JavaPlugin {
         this.databaseProvider = new DatabaseProvider(this, this.configProvider.getDatabaseConfig());
 
         this.rootDirectory = this.getServer().getWorldContainer().getAbsolutePath();
+
+        this.gson = new Gson();
     }
 
     @Override
@@ -42,6 +44,8 @@ public class GlmcServerLinkerBukkit extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        this.glmcApiBukkit.unload(this);
+
         this.databaseProvider.unload();
     }
 
@@ -67,5 +71,9 @@ public class GlmcServerLinkerBukkit extends JavaPlugin {
 
     public GlmcApiBukkit getGlmcApiBukkit() {
         return glmcApiBukkit;
+    }
+
+    public Gson getGson() {
+        return gson;
     }
 }

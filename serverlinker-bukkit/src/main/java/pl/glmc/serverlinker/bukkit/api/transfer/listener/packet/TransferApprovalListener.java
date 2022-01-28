@@ -18,7 +18,7 @@ public class TransferApprovalListener extends PacketListener<TransferApprovalReq
         this.plugin = plugin;
         this.transferService = transferService;
 
-        this.plugin.getGlmcApiBukkit().getPacketService().registerListener(this);
+        this.plugin.getGlmcApiBukkit().getPacketService().registerListener(this, this.plugin);
     }
 
     @Override
@@ -26,9 +26,7 @@ public class TransferApprovalListener extends PacketListener<TransferApprovalReq
         TransferApprovalResponse transferApprovalResponse = new TransferApprovalResponse(true,
                 transferApprovalRequest.getUniqueId(), TransferAPI.TransferApprovalResult.ACCEPTED);
 
-        if (!transferApprovalRequest.getTransferReason().isDataRequired()) {
-            this.transferService.incomingTransfer(transferApprovalRequest.getPlayerUniqueId());
-        }
+        this.transferService.incomingTransfer(transferApprovalRequest.getPlayerUniqueId(), transferApprovalRequest.getTransferMetaData());
 
         this.plugin.getGlmcApiBukkit().getPacketService().sendPacket(transferApprovalResponse, transferApprovalRequest.getSender());
     }

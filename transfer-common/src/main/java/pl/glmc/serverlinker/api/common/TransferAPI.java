@@ -23,14 +23,15 @@ public class TransferAPI {
         FAILED_TRANSFERRING;
     }
 
-    public enum TransferReason {
-        SERVER_TRANSFER(true),
-        FIRST_JOIN(false),
-        PROXY_JOIN(true);
+    public enum TransferType {
+        NORMAL(true),
+        WITH_DATA(true),
+        WITHOUT_DATA(false);
+
 
         private final boolean dataRequired;
 
-        TransferReason(boolean dataRequired) {
+        TransferType(boolean dataRequired) {
             this.dataRequired = dataRequired;
         }
 
@@ -39,9 +40,16 @@ public class TransferAPI {
         }
     }
 
+    public enum TransferReason {
+        SERVER_TRANSFER,
+        FIRST_JOIN,
+        PROXY_JOIN;
+    }
+
     public enum TransferDataResult {
         RECEIVED,
         TIMEOUT,
+        PROCESS_CANCELED,
         CORRUPTED_DATA,
         SAVING_FAILED,
         PLAYER_OFFLINE;
@@ -49,7 +57,15 @@ public class TransferAPI {
 
     public enum JoinResult {
         SUCCESS,
-        FAILED;
+        ALREADY_TRANSFERRING,
+        INVALID_TARGET_SERVER,
+        FAILED_CONNECTING,
+        FAILED_PERMISSIONS,
+        FAILED_PLAYER_INFO,
+        FAILED_DATA_SYNC,
+        FAILED_OFFLINE_SYNC,
+        FAILED_TRANSFERRING,
+        DENIED;
     }
 
     public enum TransferApprovalResult {
@@ -74,7 +90,7 @@ public class TransferAPI {
             return id;
         }
 
-        public boolean accepted() {
+        public boolean isAccepted() {
             return accepted;
         }
 

@@ -5,10 +5,13 @@ import net.querz.nbt.io.SNBTUtil;
 import net.querz.nbt.tag.CompoundTag;
 import net.querz.nbt.tag.LongTag;
 import net.querz.nbt.tag.StringTag;
+import net.querz.nbt.tag.Tag;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import pl.glmc.api.common.packet.listener.PacketListener;
-import pl.glmc.serverlinker.api.bukkit.transfer.TransferDataProcessEvent;
+import pl.glmc.serverlinker.api.bukkit.transfer.TransferProcessEvent;
 import pl.glmc.serverlinker.api.common.TransferAPI;
+import pl.glmc.serverlinker.api.common.TransferMetaData;
 import pl.glmc.serverlinker.bukkit.GlmcServerLinkerBukkit;
 import pl.glmc.serverlinker.bukkit.api.transfer.ApiTransferService;
 import pl.glmc.serverlinker.common.LocalPacketRegistry;
@@ -17,6 +20,7 @@ import pl.glmc.serverlinker.common.transfer.TransferDataResponse;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import java.util.UUID;
 
 public class TransferDataListener extends PacketListener<TransferData> {
@@ -38,7 +42,7 @@ public class TransferDataListener extends PacketListener<TransferData> {
         this.defaultPlayerdata.put("WorldUUIDLeast", new LongTag(world.getUID().getLeastSignificantBits()));
         this.defaultPlayerdata.put("Dimension", new StringTag("minecraft:overworld"));
 
-        this.plugin.getGlmcApiBukkit().getPacketService().registerListener(this);
+        this.plugin.getGlmcApiBukkit().getPacketService().registerListener(this, this.plugin);
     }
 
 
@@ -48,11 +52,17 @@ public class TransferDataListener extends PacketListener<TransferData> {
     }
 
     private void processTransferData(TransferData transferData) {
+        if (!this.transferService.isTransferred(transferData.getPlayerUniqueId())) {
+            this.plugin.getLogger().warning(ChatColor.RED + "Received unexpected transfer data for player " + transferData.getPlayerData() + " from " + transferData.getOriginSender());
+
+            return;
+        }
+
         CompoundTag playerDataTag;
         CompoundTag optionalDataTag;
         try {
             playerDataTag = (CompoundTag) SNBTUtil.fromSNBT(transferData.getPlayerData());
-            optionalDataTag = (CompoundTag) SNBTUtil.fromSNBT(transferData.getOptionalData());
+            optionalDataTag = transferData.getOptionalData().isEmpty() ? new CompoundTag() : (CompoundTag) SNBTUtil.fromSNBT(transferData.getOptionalData());
         } catch (IOException exception) {
             this.sendTransferDataResponse(transferData, TransferAPI.TransferDataResult.CORRUPTED_DATA, false);
 
@@ -67,15 +77,19 @@ public class TransferDataListener extends PacketListener<TransferData> {
             }
         }
 
-        playerDataTag.put("Pos", optionalDataTag.get("Pos"));
-        playerDataTag.put("Rotation", optionalDataTag.get("Rotation"));
-
-        TransferDataProcessEvent playerDataProcessEvent = new TransferDataProcessEvent(playerUniqueId, optionalDataTag);
+        TransferMetaData transferMetaData = this.transferService.getTransferMetaData(playerUniqueId);
+        TransferProcessEvent playerDataProcessEvent = new TransferProcessEvent(playerUniqueId, transferMetaData, optionalDataTag);
         this.plugin.getServer().getPluginManager().callEvent(playerDataProcessEvent);
 
+        if (playerDataProcessEvent.isCanceledProcessing()) {
+            this.sendTransferDataResponse(transferData, TransferAPI.TransferDataResult.PROCESS_CANCELED, false);
+
+            return;
+        }
+
         CompoundTag applyTag = playerDataProcessEvent.getApplyTag();
-        for (String optionalKey : applyTag.keySet()) {
-            playerDataTag.put(optionalKey, applyTag.get(optionalKey));
+        for (Map.Entry<String, Tag<?>> applyEntry : applyTag.entrySet()) {
+            playerDataTag.put(applyEntry.getKey(), applyEntry.getValue());
         }
 
         File playerFile = new File(this.plugin.getRootDirectory() + "/world/playerdata/", playerUniqueId + ".dat");
@@ -87,8 +101,6 @@ public class TransferDataListener extends PacketListener<TransferData> {
 
             return;
         }
-
-        this.transferService.incomingTransfer(playerUniqueId);
 
         this.sendTransferDataResponse(transferData, TransferAPI.TransferDataResult.RECEIVED, true);
     }

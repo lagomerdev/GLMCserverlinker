@@ -1,1 +1,14 @@
-server_id: 'id'
+settings:
+  id: 'id'
+  border:
+    min:
+      x: 1
+      z: 1
+    max:
+      x: 2
+      z: 2
+    server:
+      north: 's1'
+      south: 's2'
+      east: 's3'
+      west: 's4'
