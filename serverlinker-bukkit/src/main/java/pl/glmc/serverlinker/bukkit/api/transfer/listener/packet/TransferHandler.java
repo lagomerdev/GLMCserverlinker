@@ -1,7 +1,5 @@
 package pl.glmc.serverlinker.bukkit.api.transfer.listener.packet;
 
-import pl.glmc.api.common.packet.Packet;
-import pl.glmc.api.common.packet.PacketInfo;
 import pl.glmc.api.common.packet.listener.ResponseHandlerListener;
 import pl.glmc.serverlinker.api.common.TransferAPI;
 import pl.glmc.serverlinker.common.LocalPacketRegistry;

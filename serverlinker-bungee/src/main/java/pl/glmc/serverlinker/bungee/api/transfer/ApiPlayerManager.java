@@ -3,6 +3,7 @@ package pl.glmc.serverlinker.bungee.api.transfer;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import pl.glmc.serverlinker.api.bungee.event.SpecifyJoinServerEvent;
 import pl.glmc.serverlinker.api.bungee.transfer.PlayerManager;
 import pl.glmc.serverlinker.api.common.TransferAPI;
@@ -10,6 +11,7 @@ import pl.glmc.serverlinker.api.common.TransferMetaData;
 import pl.glmc.serverlinker.bungee.GlmcServerLinkerBungee;
 import pl.glmc.serverlinker.bungee.api.transfer.listener.event.PlayerJoinQuitListener;
 import pl.glmc.serverlinker.bungee.api.transfer.listener.packet.OfflineDataHandler;
+import pl.glmc.serverlinker.common.Compression;
 import pl.glmc.serverlinker.common.transfer.OfflineDataRequest;
 
 import java.sql.SQLException;
@@ -61,7 +63,7 @@ public class ApiPlayerManager implements PlayerManager {
                 if (resultSet.next()) {
                     String lastServer = resultSet.getString("last_server");
                     String lastServerType = resultSet.getString("last_server_type");
-                    String playerData = resultSet.getString("player_data");
+                    String playerData = Compression.decompress(resultSet.getBytes("player_data"));
                     String playerDataServer = resultSet.getString("player_data_server");
 
                     if (lastServer == null || playerDataServer == null) {
@@ -69,6 +71,7 @@ public class ApiPlayerManager implements PlayerManager {
 
                         return;
                     }
+
 
                     boolean dataSynced = lastServer.equals(playerDataServer);
 

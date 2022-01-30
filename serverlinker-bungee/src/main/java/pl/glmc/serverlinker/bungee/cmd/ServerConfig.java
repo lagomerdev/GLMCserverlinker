@@ -7,7 +7,7 @@ import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import pl.glmc.serverlinker.api.common.TransferAPI;
 import pl.glmc.serverlinker.api.common.TransferMetaData;
 import pl.glmc.serverlinker.bungee.GlmcServerLinkerBungee;
@@ -40,13 +40,12 @@ public class ServerConfig extends Command implements TabExecutor {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        if (!(sender instanceof ProxiedPlayer)) {
+        if (!(sender instanceof ProxiedPlayer player)) {
             sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Tej komendy może użyć tylko gracz!"));
 
             return;
         }
 
-        ProxiedPlayer player = (ProxiedPlayer) sender;
         if (args.length == 1) {
             String serverTarget = args[0];
             ServerInfo serverTargetInfo = this.plugin.getProxy().getServerInfo(serverTarget);

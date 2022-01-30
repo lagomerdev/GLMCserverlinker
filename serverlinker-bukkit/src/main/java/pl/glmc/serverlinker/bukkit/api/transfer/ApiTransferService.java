@@ -4,10 +4,12 @@ import net.querz.nbt.io.NBTUtil;
 import net.querz.nbt.io.NamedTag;
 import net.querz.nbt.io.SNBTUtil;
 import net.querz.nbt.tag.CompoundTag;
+import org.apache.logging.log4j.util.Base64Util;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
+import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import pl.glmc.serverlinker.api.bukkit.transfer.TransferService;
 import pl.glmc.serverlinker.api.common.TransferAPI;
 import pl.glmc.serverlinker.api.common.TransferMetaData;
@@ -17,19 +19,17 @@ import pl.glmc.serverlinker.bukkit.api.transfer.listener.event.PlayerFreezeListe
 import pl.glmc.serverlinker.bukkit.api.transfer.listener.event.PlayerJoinQuitListener;
 import pl.glmc.serverlinker.bukkit.api.transfer.listener.event.TransferProcessListener;
 import pl.glmc.serverlinker.bukkit.api.transfer.listener.packet.*;
+import pl.glmc.serverlinker.common.Compression;
 import pl.glmc.serverlinker.common.transfer.TransferRequest;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 public class ApiTransferService implements TransferService {
     private static final String JOIN_QUIT_STATEMENT = "INSERT INTO `server_connection_logs`(`player_uuid`, `server`, `server_type`, `action`) VALUES (?,?,?,?)";
-    private static final String DATA_UPDATE_STATEMENT = "UPDATE `player_info` SET player_data = ?, player_data_server = ?";
+    private static final String DATA_UPDATE_STATEMENT = "UPDATE `player_info` SET player_data = ?, player_data_server = ? WHERE uuid = ?";
 
     private final GlmcServerLinkerBukkit plugin;
 
@@ -129,7 +129,7 @@ public class ApiTransferService implements TransferService {
 
             String playerData = SNBTUtil.toSNBT(playerTag);
 
-            this.plugin.getDatabaseProvider().updateAsync(DATA_UPDATE_STATEMENT, playerData, this.plugin.getGlmcApiBukkit().getServerId());
+            this.plugin.getDatabaseProvider().updateAsync(DATA_UPDATE_STATEMENT, Compression.compress(playerData), this.plugin.getGlmcApiBukkit().getServerId(), player.getUniqueId().toString());
         } catch (IOException e) {
             e.printStackTrace();
 
