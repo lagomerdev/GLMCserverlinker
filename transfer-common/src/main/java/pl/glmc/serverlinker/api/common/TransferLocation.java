@@ -2,23 +2,23 @@ package pl.glmc.serverlinker.api.common;
 
 public class TransferLocation {
 
-    private final int x, y, z;
+    private final double x, y, z;
 
-    public TransferLocation(int x, int y, int z) {
+    public TransferLocation(double x, double y, double z) {
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
-    public int getZ() {
+    public double getZ() {
         return z;
     }
 }

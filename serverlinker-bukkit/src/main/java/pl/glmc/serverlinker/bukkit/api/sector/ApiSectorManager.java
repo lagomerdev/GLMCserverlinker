@@ -1,17 +1,21 @@
 package pl.glmc.serverlinker.bukkit.api.sector;
 
+import org.bukkit.World;
 import pl.glmc.serverlinker.api.bukkit.sector.SectorManager;
 import pl.glmc.serverlinker.bukkit.GlmcServerLinkerBukkit;
 import pl.glmc.serverlinker.common.sector.SectorData;
 import pl.glmc.serverlinker.common.sector.SectorType;
 
 import java.sql.SQLException;
+import java.util.Objects;
 
 public class ApiSectorManager implements SectorManager {
     private static final String GET_SECTOR_INFO = "SELECT * FROM `sector_info` WHERE id = ?";
     private static final String GET_SECTOR_TYPE = "SELECT * FROM `sector_types` WHERE id = ?";
 
     private final GlmcServerLinkerBukkit plugin;
+
+    private World world;
 
     public static SectorData sectorData;
 
@@ -41,7 +45,7 @@ public class ApiSectorManager implements SectorManager {
                 String sectorTypeId = resultSet.getString("type");
                 SectorType sectorType = this.loadSectorType(sectorTypeId);
 
-                return new SectorData(serverNorth, serverEast, serverSouth, serverWest, minX, minZ, maxX, maxZ, viewDistance, simulationDistance, sectorType);
+                return new SectorData(this.plugin.getGlmcApiBukkit().getServerId(), serverNorth, serverEast, serverSouth, serverWest, minX, minZ, maxX, maxZ, viewDistance, simulationDistance, sectorType);
             }
         } catch (SQLException | NullPointerException e) {
             e.printStackTrace();
@@ -55,10 +59,13 @@ public class ApiSectorManager implements SectorManager {
 
         if (resultSet.next()) {
             String worldName = resultSet.getString("world_name");
+
+            this.world = Objects.requireNonNull(this.plugin.getServer().getWorld(worldName));
+
             boolean hasSpawn = resultSet.getBoolean("has_spawn");
             boolean hasWeatherAndTimeSync = resultSet.getBoolean("has_weather_and_time_sync");
 
-            SectorType sectorType = new SectorType(worldName, hasSpawn, hasWeatherAndTimeSync);
+            SectorType sectorType = new SectorType(sectorTypeId, worldName, hasSpawn, hasWeatherAndTimeSync);
 
             if (hasSpawn) {
                 int x = resultSet.getInt("spawn_x");
@@ -82,5 +89,10 @@ public class ApiSectorManager implements SectorManager {
 
     public SectorData getSectorData() {
         return sectorData;
+    }
+
+    @Override
+    public World getWorld() {
+        return this.world;
     }
 }

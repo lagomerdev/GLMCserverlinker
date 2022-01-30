@@ -15,10 +15,10 @@ import pl.glmc.serverlinker.bungee.GlmcServerLinkerBungee;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-public class ServerConfig extends Command implements TabExecutor {
+public class ServerCmd extends Command implements TabExecutor {
     private final GlmcServerLinkerBungee plugin;
 
-    public ServerConfig(GlmcServerLinkerBungee plugin) {
+    public ServerCmd(GlmcServerLinkerBungee plugin) {
         super("server", "glmc.server", "serwer");
 
         this.plugin = plugin;

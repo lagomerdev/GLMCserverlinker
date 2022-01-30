@@ -38,5 +38,11 @@
             <version>0.1.0-alpha</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>pl.glmc</groupId>
+            <artifactId>serverlinker-common</artifactId>
+            <version>0.1.0-alpha</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 </project>

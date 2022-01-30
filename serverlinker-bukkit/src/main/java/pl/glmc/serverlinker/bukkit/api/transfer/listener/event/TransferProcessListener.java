@@ -1,8 +1,9 @@
 package pl.glmc.serverlinker.bukkit.api.transfer.listener.event;
 
-import com.google.gson.Gson;
-import net.querz.nbt.tag.DoubleTag;
-import net.querz.nbt.tag.ListTag;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Biome;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,6 +11,7 @@ import pl.glmc.serverlinker.api.bukkit.transfer.TransferProcessEvent;
 import pl.glmc.serverlinker.api.common.TransferLocation;
 import pl.glmc.serverlinker.api.common.TransferMetaKey;
 import pl.glmc.serverlinker.bukkit.GlmcServerLinkerBukkit;
+import pl.glmc.serverlinker.bukkit.api.sector.ApiSectorManager;
 
 import java.util.UUID;
 
@@ -65,8 +67,6 @@ public class TransferProcessListener implements Listener {
             newRotationTag.addFloat(locationTarget.getBlockY());
             newRotationTag.addFloat(locationTarget.getPitch());
 
-            this.plugin.getLogger().warning(newPosTag.toString());
-            this.plugin.getLogger().warning(optionalTag.get("Rotation").toString());
             transferProcess.getApplyTag().put("Pos", newPosTag);
             transferProcess.getApplyTag().put("Rotation", optionalTag.get("Rotation"));
         } else {

@@ -1,6 +1,8 @@
 package pl.glmc.serverlinker.common;
 
 import pl.glmc.api.common.packet.PacketInfo;
+import pl.glmc.serverlinker.common.rtp.GetRandomCoordinatesRequest;
+import pl.glmc.serverlinker.common.rtp.GetRandomCoordinatesResponse;
 import pl.glmc.serverlinker.common.transfer.*;
 
 public class LocalPacketRegistry {
@@ -16,5 +18,10 @@ public class LocalPacketRegistry {
         public static final PacketInfo TRANSFER_DATA_REQUEST = PacketInfo.make("serverlinker.transfer_data_request", TransferDataRequest.class);
         public static final PacketInfo TRANSFER_DATA_RESPONSE = PacketInfo.make("serverlinker.transfer_data_response", TransferDataResponse.class);
         public static final PacketInfo TRANSFER_UNFREEZE = PacketInfo.make("serverlinker.transfer_unfreeze", TransferUnfreeze.class);
+    }
+
+    public static final class RandomTeleport {
+        public static final PacketInfo GET_RANDOM_COORDINATES_REQUEST = PacketInfo.make("serverlinker.get_random_coordinates_request", GetRandomCoordinatesRequest.class);
+        public static final PacketInfo GET_RANDOM_COORDINATES_RESPONSE = PacketInfo.make("serverlinker.get_random_coordinates_response", GetRandomCoordinatesResponse.class);
     }
 }

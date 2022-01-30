@@ -42,6 +42,7 @@ public class TransferAPI {
 
     public enum TransferReason {
         SERVER_TRANSFER,
+        SERVER_MATCH,
         FIRST_JOIN,
         PROXY_JOIN;
     }

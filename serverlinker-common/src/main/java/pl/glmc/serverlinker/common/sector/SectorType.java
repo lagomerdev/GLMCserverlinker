@@ -2,6 +2,8 @@ package pl.glmc.serverlinker.common.sector;
 
 public class SectorType {
 
+    private final String id;
+
     private String worldName;
     private boolean hasSpawn, hasWeatherAndTimeSync;
 
@@ -9,10 +11,16 @@ public class SectorType {
     private int spawnX, spawnY, spawnZ;
     private String weatherAndTimeProvider;
 
-    public SectorType(String worldName, boolean hasSpawn, boolean hasWeatherAndTimeSync) {
+    public SectorType(String id, String worldName, boolean hasSpawn, boolean hasWeatherAndTimeSync) {
+        this.id = id;
+
         this.worldName = worldName;
         this.hasSpawn = hasSpawn;
         this.hasWeatherAndTimeSync = hasWeatherAndTimeSync;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public void setSpawn(int spawnX, int spawnY, int spawnZ) {

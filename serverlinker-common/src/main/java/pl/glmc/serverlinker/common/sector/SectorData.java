@@ -5,13 +5,16 @@ import java.util.List;
 
 public class SectorData {
 
+    private final String id;
+
     private String serverNorth, serverEast, serverSouth, serverWest;
     private double minX, minZ, maxX, maxZ;
     private int viewDistance, simulationDistance;
 
     private SectorType sectorType;
 
-    public SectorData(String serverNorth, String serverEast, String serverSouth, String serverWest, double minX, double minZ, double maxX, double maxZ, int viewDistance, int simulationDistance, SectorType sectorType) {
+    public SectorData(String id, String serverNorth, String serverEast, String serverSouth, String serverWest, double minX, double minZ, double maxX, double maxZ, int viewDistance, int simulationDistance, SectorType sectorType) {
+        this.id = id;
         this.serverNorth = serverNorth;
         this.serverEast = serverEast;
         this.serverSouth = serverSouth;
@@ -43,6 +46,10 @@ public class SectorData {
         }
 
         System.out.println(Arrays.toString(List.of(minX, minZ, maxX, maxZ).toArray()));
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getServerNorth() {
