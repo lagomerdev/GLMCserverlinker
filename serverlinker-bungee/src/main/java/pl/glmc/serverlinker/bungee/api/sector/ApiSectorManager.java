@@ -1,12 +1,15 @@
 package pl.glmc.serverlinker.bungee.api.sector;
 
+import net.md_5.bungee.api.config.ServerInfo;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import pl.glmc.serverlinker.api.bungee.sector.SectorManager;
+import pl.glmc.serverlinker.api.common.sector.SectorData;
+import pl.glmc.serverlinker.api.common.sector.SectorType;
 import pl.glmc.serverlinker.bungee.GlmcServerLinkerBungee;
-import pl.glmc.serverlinker.common.sector.SectorData;
-import pl.glmc.serverlinker.common.sector.SectorType;
 
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ApiSectorManager implements SectorManager {
     private static final String GET_SECTORS = "SELECT * FROM `sector_info`";
@@ -26,7 +29,7 @@ public class ApiSectorManager implements SectorManager {
     }
 
     private void init() {
-        final String sectorInfoStatement = "CREATE TABLE `sector_info` (" +
+        final String sectorInfoStatement = "CREATE TABLE IF NOT EXISTS `sector_info` (" +
                 "  `id` varchar(30) NOT NULL, " +
                 "  `server_north` varchar(30) NOT NULL, " +
                 "  `server_east` varchar(30) NOT NULL, " +
@@ -42,7 +45,7 @@ public class ApiSectorManager implements SectorManager {
                 "  PRIMARY KEY (`id`) " +
                 ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
 
-        final String sectorTypesStatement = "CREATE TABLE `sector_types` ( " +
+        final String sectorTypesStatement = "CREATE TABLE IF NOT EXISTS `sector_types` ( " +
                 "  `id` varchar(30) NOT NULL, " +
                 "  `world_name` varchar(30) NOT NULL, " +
                 "  `has_spawn` tinyint(1) NOT NULL, " +
@@ -131,20 +134,49 @@ public class ApiSectorManager implements SectorManager {
         return Collections.unmodifiableMap(sectorTypes);
     }
 
-    public boolean isIn(SectorData sector, double x, double z) {
+    @Override
+    public SectorData getSectorData(ProxiedPlayer player) {
+        Objects.requireNonNull(player);
+        return this.sectors.get(player.getServer().getInfo().getName());
+    }
+
+    @Override
+    public SectorData getSectorData(ServerInfo serverInfo) {
+        Objects.requireNonNull(serverInfo);
+        return this.sectors.get(serverInfo.getName());
+    }
+
+    @Override
+    public SectorData getSectorData(String server) {
+        Objects.requireNonNull(server);
+        return this.sectors.get(server);
+    }
+
+    @Override
+    public boolean isInSector(SectorData sector, double x, double z) {
         return x > sector.getMinX()
                 && x < sector.getMaxX()
                 && z > sector.getMinZ()
                 && z < sector.getMaxZ();
     }
 
+    @Override
+    public boolean isInSectorType(SectorType sectorType, double x, double z) {
+        return this.sectors.values()
+                .stream()
+                .anyMatch(sectorData -> sectorData.getSectorType().equals(sectorType)
+                        && isInSector(sectorData, x, z));
+    }
+
+    @Override
     public Optional<SectorData> getSectorFromLocation(SectorType sectorType, double x, double z) {
         return this.sectors.values()
                 .stream()
-                .filter(sectorData -> sectorData.getSectorType().getId().equals(sectorType.getId()) && isIn(sectorData, x, z))
+                .filter(sectorData -> sectorData.getSectorType().equals(sectorType) && isInSector(sectorData, x, z))
                 .findFirst();
     }
 
+    @Override
     public boolean isServerSector(String serverId) {
         return this.sectors.values()
                 .stream()

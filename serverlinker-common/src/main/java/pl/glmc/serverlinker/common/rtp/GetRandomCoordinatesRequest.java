@@ -5,7 +5,7 @@ import pl.glmc.api.common.packet.RequestPacket;
 import pl.glmc.serverlinker.common.LocalPacketRegistry;
 
 public class GetRandomCoordinatesRequest extends RequestPacket {
-    private static final PacketInfo PACKET_INFO = LocalPacketRegistry.RandomTeleport.GET_RANDOM_COORDINATES_REQUEST;
+    private static final PacketInfo PACKET_INFO = LocalPacketRegistry.Teleport.GET_RANDOM_COORDINATES_REQUEST;
 
     @Override
     public String getPacketId() {

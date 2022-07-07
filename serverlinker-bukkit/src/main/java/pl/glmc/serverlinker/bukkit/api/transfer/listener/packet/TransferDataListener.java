@@ -102,6 +102,8 @@ public class TransferDataListener extends PacketListener<TransferData> {
             return;
         }
 
+        System.out.println(playerDataTag.getListTag("Pos").toString());
+
         this.sendTransferDataResponse(transferData, TransferAPI.TransferDataResult.RECEIVED, true);
     }
 

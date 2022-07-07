@@ -1,16 +1,11 @@
 package pl.glmc.serverlinker.bukkit.api.rtp.packet;
 
 import pl.glmc.api.common.packet.listener.PacketListener;
-import pl.glmc.serverlinker.api.common.TransferLocation;
 import pl.glmc.serverlinker.bukkit.GlmcServerLinkerBukkit;
 import pl.glmc.serverlinker.bukkit.api.rtp.ApiRandomTeleportService;
-import pl.glmc.serverlinker.bukkit.api.transfer.ApiTransferService;
 import pl.glmc.serverlinker.common.LocalPacketRegistry;
 import pl.glmc.serverlinker.common.rtp.GetRandomCoordinatesRequest;
 import pl.glmc.serverlinker.common.rtp.GetRandomCoordinatesResponse;
-
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class GetRandomCoordinatesListener extends PacketListener<GetRandomCoordinatesRequest> {
 
@@ -18,7 +13,7 @@ public class GetRandomCoordinatesListener extends PacketListener<GetRandomCoordi
     private final ApiRandomTeleportService randomTeleportService;
 
     public GetRandomCoordinatesListener(GlmcServerLinkerBukkit plugin, ApiRandomTeleportService randomTeleportService) {
-        super(LocalPacketRegistry.RandomTeleport.GET_RANDOM_COORDINATES_REQUEST, GetRandomCoordinatesRequest.class);
+        super(LocalPacketRegistry.Teleport.GET_RANDOM_COORDINATES_REQUEST, GetRandomCoordinatesRequest.class);
 
         this.plugin = plugin;
         this.randomTeleportService = randomTeleportService;

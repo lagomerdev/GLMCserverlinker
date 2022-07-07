@@ -1,4 +1,4 @@
-package pl.glmc.serverlinker.common.sector;
+package pl.glmc.serverlinker.api.common.sector;
 
 public class SectorType {
 
@@ -59,5 +59,26 @@ public class SectorType {
 
     public String getWeatherAndTimeProvider() {
         return weatherAndTimeProvider;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof SectorType sectorType)) return false;
+
+        return this.id.equals(sectorType.getId());
+    }
+
+    @Override
+    public String toString() {
+        return "SectorType{" +
+                "id='" + id + '\'' +
+                ", worldName='" + worldName + '\'' +
+                ", hasSpawn=" + hasSpawn +
+                ", hasWeatherAndTimeSync=" + hasWeatherAndTimeSync +
+                ", spawnX=" + spawnX +
+                ", spawnY=" + spawnY +
+                ", spawnZ=" + spawnZ +
+                ", weatherAndTimeProvider='" + weatherAndTimeProvider + '\'' +
+                '}';
     }
 }

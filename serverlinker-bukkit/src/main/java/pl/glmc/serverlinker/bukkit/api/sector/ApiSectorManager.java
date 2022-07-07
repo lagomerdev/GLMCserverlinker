@@ -2,9 +2,9 @@ package pl.glmc.serverlinker.bukkit.api.sector;
 
 import org.bukkit.World;
 import pl.glmc.serverlinker.api.bukkit.sector.SectorManager;
+import pl.glmc.serverlinker.api.common.sector.SectorType;
 import pl.glmc.serverlinker.bukkit.GlmcServerLinkerBukkit;
-import pl.glmc.serverlinker.common.sector.SectorData;
-import pl.glmc.serverlinker.common.sector.SectorType;
+import pl.glmc.serverlinker.api.common.sector.SectorData;
 
 import java.sql.SQLException;
 import java.util.Objects;

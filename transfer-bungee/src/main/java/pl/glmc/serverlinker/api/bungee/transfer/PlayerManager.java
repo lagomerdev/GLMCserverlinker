@@ -7,16 +7,6 @@ import java.util.concurrent.CompletableFuture;
 
 public interface PlayerManager {
 
-    /**
-     *
-     * @param player
-     * @return
-     */
-    CompletableFuture<TransferAPI.JoinResult> processJoin(ProxiedPlayer player);
+    //
 
-    /**
-     *
-     * @param player
-     */
-    void processDisconnect(ProxiedPlayer player);
 }

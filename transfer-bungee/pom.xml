@@ -18,7 +18,18 @@
         <maven.compiler.target>16</maven.compiler.target>
     </properties>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <url>http://192.168.1.201:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <repositories>
+        <repository>
+            <id>nexus-snapshots</id>
+            <url>http://192.168.1.201:8081/repository/maven-public/</url>
+        </repository>
         <repository>
             <id>papermc</id>
             <url>https://papermc.io/repo/repository/maven-public/</url>
@@ -35,12 +46,6 @@
         <dependency>
             <groupId>pl.glmc</groupId>
             <artifactId>serverlinker-transfer-common</artifactId>
-            <version>0.1.0-alpha</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>pl.glmc</groupId>
-            <artifactId>serverlinker-common</artifactId>
             <version>0.1.0-alpha</version>
             <scope>compile</scope>
         </dependency>

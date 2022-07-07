@@ -1,6 +1,5 @@
 package pl.glmc.serverlinker.bukkit.api.transfer.listener.event;
 
-import io.papermc.paper.event.entity.EntityMoveEvent;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -11,12 +10,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import pl.glmc.serverlinker.api.common.TransferAPI;
-import pl.glmc.serverlinker.api.common.TransferLocation;
 import pl.glmc.serverlinker.api.common.TransferMetaData;
-import pl.glmc.serverlinker.api.common.TransferMetaKey;
 import pl.glmc.serverlinker.bukkit.GlmcServerLinkerBukkit;
 import pl.glmc.serverlinker.bukkit.api.sector.ApiSectorManager;
-import pl.glmc.serverlinker.common.sector.SectorData;
+import pl.glmc.serverlinker.api.common.sector.SectorData;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -95,6 +92,8 @@ public class PlayerBorderListener implements Listener {
 
         world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
         world.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+        world.setGameRule(GameRule.KEEP_INVENTORY, false);
+        world.setGameRule(GameRule.RANDOM_TICK_SPEED, 3);
 
         if (this.sectorData.getSectorType().hasWeatherAndTimeSync() 
                 && !this.sectorData.getSectorType().getWeatherAndTimeProvider().equals(this.plugin.getGlmcApiBukkit().getServerId())) {
@@ -123,18 +122,18 @@ public class PlayerBorderListener implements Listener {
     private void boucePlayer(Player player, String direction) {
         if (player.getLocation().getBlock().getBlockData().getMaterial() != Material.AIR) {
             if (Objects.equals(direction, "north"))
-                player.setVelocity(player.getLocation().toVector().subtract(player.getLocation().add(0, -0.3, 0.8).toVector()).multiply(1));
-            if (Objects.equals(direction, "south"))
                 player.setVelocity(player.getLocation().toVector().subtract(player.getLocation().add(0, -0.3, -0.8).toVector()).multiply(1));
+            if (Objects.equals(direction, "south"))
+                player.setVelocity(player.getLocation().toVector().subtract(player.getLocation().add(0, -0.3, 0.8).toVector()).multiply(1));
             if (Objects.equals(direction, "east"))
                 player.setVelocity(player.getLocation().toVector().subtract(player.getLocation().add(0.8, -0.3, 0).toVector()).multiply(1));
             if (Objects.equals(direction, "west"))
                 player.setVelocity(player.getLocation().toVector().subtract(player.getLocation().add(-0.8, -0.3, 0).toVector()).multiply(1));
         } else {
             if (Objects.equals(direction, "north"))
-                player.setVelocity(player.getLocation().toVector().subtract(player.getLocation().add(0, -0.2, 0.4).toVector()).multiply(1));
-            if (Objects.equals(direction, "south"))
                 player.setVelocity(player.getLocation().toVector().subtract(player.getLocation().add(0, -0.2, -0.4).toVector()).multiply(1));
+            if (Objects.equals(direction, "south"))
+                player.setVelocity(player.getLocation().toVector().subtract(player.getLocation().add(0, -0.2, 0.4).toVector()).multiply(1));
             if (Objects.equals(direction, "east"))
                 player.setVelocity(player.getLocation().toVector().subtract(player.getLocation().add(0.4, -0.2, 0).toVector()).multiply(1));
             if (Objects.equals(direction, "west"))
@@ -158,7 +157,10 @@ public class PlayerBorderListener implements Listener {
                 this.boucePlayer(player, distanceInfo.getDirection());
                 player.sendMessage(ChatColor.RED + "Nie możesz przekroczyć granicy mapy!");
             }
-            else {
+            else if (this.plugin.getGlmcAntylogout().hasActiveAntyLogout(player.getUniqueId())) {
+                this.boucePlayer(player, distanceInfo.getDirection());
+                player.sendMessage(ChatColor.RED + "Nie możesz zmienić sektora podaczas antylogoutu!");
+            } else {
                 TransferMetaData transferMetaData = new TransferMetaData();
                 this.plugin.getGlmcTransferProvider().getTransferService().transferPlayer(player.getUniqueId(), server, transferMetaData, TransferAPI.TransferReason.SERVER_TRANSFER, false).
                         thenAccept(transferResult -> player.sendMessage(ChatColor.GOLD + "result transferu: " + transferResult));

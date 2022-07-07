@@ -1,4 +1,4 @@
-package pl.glmc.serverlinker.common.sector;
+package pl.glmc.serverlinker.api.common.sector;
 
 import java.util.Arrays;
 import java.util.List;
@@ -94,5 +94,30 @@ public class SectorData {
 
     public SectorType getSectorType() {
         return sectorType;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof SectorData sectorData)) return false;
+
+        return this.id.equals(sectorData.getId());
+    }
+
+    @Override
+    public String toString() {
+        return "SectorData{" +
+                "id='" + id + '\'' +
+                ", serverNorth='" + serverNorth + '\'' +
+                ", serverEast='" + serverEast + '\'' +
+                ", serverSouth='" + serverSouth + '\'' +
+                ", serverWest='" + serverWest + '\'' +
+                ", minX=" + minX +
+                ", minZ=" + minZ +
+                ", maxX=" + maxX +
+                ", maxZ=" + maxZ +
+                ", viewDistance=" + viewDistance +
+                ", simulationDistance=" + simulationDistance +
+                ", sectorType=" + sectorType +
+                '}';
     }
 }

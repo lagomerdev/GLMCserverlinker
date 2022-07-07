@@ -1,14 +1,13 @@
-package pl.glmc.serverlinker.bungee.api.transfer;
+package pl.glmc.serverlinker.bungee.api.player;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import pl.glmc.serverlinker.api.bungee.event.SpecifyJoinServerEvent;
-import pl.glmc.serverlinker.api.bungee.transfer.PlayerManager;
 import pl.glmc.serverlinker.api.common.TransferAPI;
 import pl.glmc.serverlinker.api.common.TransferMetaData;
 import pl.glmc.serverlinker.bungee.GlmcServerLinkerBungee;
+import pl.glmc.serverlinker.bungee.api.transfer.ApiTransferService;
 import pl.glmc.serverlinker.bungee.api.transfer.listener.event.PlayerJoinQuitListener;
 import pl.glmc.serverlinker.bungee.api.transfer.listener.packet.OfflineDataHandler;
 import pl.glmc.serverlinker.common.Compression;
@@ -20,7 +19,7 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-public class ApiPlayerManager implements PlayerManager {
+public class PlayerManager {
     private static final String JOIN_QUIT_STATEMENT = "INSERT INTO `proxy_connection_logs`(`player_uuid`, `action`) VALUES (?, ?)";
     private static final String PLAYER_DATA_QUERY = "SELECT `last_server`, `last_server_type`, `player_data`, `player_data_server` FROM `player_info` WHERE `uuid` = ?";
 
@@ -32,7 +31,7 @@ public class ApiPlayerManager implements PlayerManager {
     private final GlmcServerLinkerBungee plugin;
     private final ApiTransferService transferService;
 
-    public ApiPlayerManager(GlmcServerLinkerBungee plugin, ApiTransferService transferService) {
+    public PlayerManager(GlmcServerLinkerBungee plugin, ApiTransferService transferService) {
         this.plugin = plugin;
         this.transferService = transferService;
 
@@ -45,7 +44,6 @@ public class ApiPlayerManager implements PlayerManager {
         PlayerJoinQuitListener playerJoinQuitListener = new PlayerJoinQuitListener(this.plugin, this);
     }
 
-    @Override
     public CompletableFuture<TransferAPI.JoinResult> processJoin(ProxiedPlayer player) {
         CompletableFuture<TransferAPI.JoinResult> result = new CompletableFuture<>();
 
@@ -72,15 +70,16 @@ public class ApiPlayerManager implements PlayerManager {
                         return;
                     }
 
-
                     boolean dataSynced = lastServer.equals(playerDataServer);
 
+                    System.out.println("datasynced: " + dataSynced);
                     if (!dataSynced) { //data sync check
                         this.syncData(player, lastServer, lastServerType);
                     } else {
                         this.specifyServer(player, playerData, lastServer, lastServerType);
                     }
                 } else { //new player
+                    System.out.println("first join " + player.getName());
                     this.firstJoin(player);
                 }
             } catch (SQLException e) {
@@ -93,7 +92,6 @@ public class ApiPlayerManager implements PlayerManager {
         return result;
     }
 
-    @Override
     public void processDisconnect(ProxiedPlayer player) {
         this.plugin.getDatabaseProvider().updateAsync(JOIN_QUIT_STATEMENT, player.getUniqueId().toString(), 0);
     }
@@ -123,7 +121,7 @@ public class ApiPlayerManager implements PlayerManager {
                 ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
 
         final String proxyConnectionLogsTrigger = "CREATE DEFINER=`root`@`localhost` " +
-                "TRIGGER IF NOT EXISTS update_proxy_player_info " +
+                "TRIGGER update_proxy_player_info " +
                 "BEFORE INSERT ON proxy_connection_logs " +
                 "FOR EACH ROW " +
                 "BEGIN " +
@@ -144,7 +142,7 @@ public class ApiPlayerManager implements PlayerManager {
                 ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4";
 
         final String serverConnectionLogsTrigger = "CREATE DEFINER=`root`@`localhost` " +
-                "TRIGGER IF NOT EXISTS update_server_player_info " +
+                "TRIGGER update_server_player_info " +
                 "BEFORE INSERT ON server_connection_logs " +
                 "FOR EACH ROW BEGIN " +
                 "IF (new.action = 0) " +
@@ -154,9 +152,16 @@ public class ApiPlayerManager implements PlayerManager {
 
         this.plugin.getDatabaseProvider().updateSync(playerInfoStatement);
         this.plugin.getDatabaseProvider().updateSync(proxyConnectionLogsStatement);
-        this.plugin.getDatabaseProvider().updateSync(proxyConnectionLogsTrigger);
         this.plugin.getDatabaseProvider().updateSync(serverConnectionLogsStatement);
+
+        final String triggerProxyFix = "DROP TRIGGER IF EXISTS " + "update_proxy_player_info";
+        this.plugin.getDatabaseProvider().updateSync(triggerProxyFix);
+        this.plugin.getDatabaseProvider().updateSync(proxyConnectionLogsTrigger);
+
+        final String triggerServerFix = "DROP TRIGGER IF EXISTS " + "update_server_player_info";
+        this.plugin.getDatabaseProvider().updateSync(triggerServerFix);
         this.plugin.getDatabaseProvider().updateSync(serverConnectionLogsTrigger);
+
     }
 
     private void specifyServer(ProxiedPlayer player, String playerData, String lastServer, String lastServerType) {
@@ -213,12 +218,14 @@ public class ApiPlayerManager implements PlayerManager {
         ServerInfo serverTargetInfo = specifyJoinServerEvent.getJoinServer() == null ? this.plugin.getProxy().getServerInfo("spawn") : //todo remove hard-coded server
                 this.plugin.getProxy().getServerInfo( specifyJoinServerEvent.getJoinServer());
 
+        System.out.println(2);
         if (serverTargetInfo == null) {
             this.complete(player.getUniqueId(), TransferAPI.JoinResult.INVALID_TARGET_SERVER);
 
+            System.out.println("test " + serverTargetInfo.getName());
             return;
         }
-
+        System.out.println(3);
         TransferMetaData transferMetaData = new TransferMetaData();
         this.transferService.transferPlayerWithoutData(player, serverTargetInfo.getName(), transferMetaData, TransferAPI.TransferReason.FIRST_JOIN) //todo stuck on first join
                 .thenAccept(transferResult -> {

@@ -10,13 +10,31 @@
     <version>0.1.0-alpha</version>
     <name>GLMCserverlinker</name>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <url>http://192.168.1.201:8081/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>nexus-snapshots</id>
+            <url>http://192.168.1.201:8081/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>papermc</id>
+            <url>https://papermc.io/repo/repository/maven-public/</url>
+        </repository>
+    </repositories>
+
     <modules>
         <module>transfer-bukkit</module>
         <module>transfer-bungee</module>
+        <module>transfer-common</module>
         <module>serverlinker-bukkit</module>
         <module>serverlinker-bungee</module>
         <module>serverlinker-common</module>
-        <module>transfer-common</module>
     </modules>
 
     <properties>

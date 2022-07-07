@@ -10,6 +10,8 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.event.vehicle.VehicleEnterEvent;
+import org.bukkit.event.vehicle.VehicleExitEvent;
 import pl.glmc.serverlinker.bukkit.GlmcServerLinkerBukkit;
 import pl.glmc.serverlinker.bukkit.api.transfer.ApiTransferService;
 
@@ -165,16 +167,40 @@ public class PlayerFreezeListener implements Listener {
 
     @EventHandler (priority = EventPriority.HIGHEST)
     public void onEffectApply(EntityPotionEffectEvent potionEffectEvent) {
-        if (!(potionEffectEvent.getEntity() instanceof Player)) {
+        if (!(potionEffectEvent.getEntity() instanceof Player player)) {
             return;
         }
-
-        Player player = (Player) potionEffectEvent.getEntity();
 
         if (this.transferService.isFrozen(player.getUniqueId())) {
             potionEffectEvent.setCancelled(true);
 
             player.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Transfer freeze! " + ChatColor.DARK_RED + "[onEffectApply]"));
+        }
+    }
+
+    @EventHandler (priority = EventPriority.HIGHEST)
+    public void onVehicleEnter(VehicleEnterEvent enterEvent) {
+        if (!(enterEvent.getEntered() instanceof Player player)) {
+            return;
+        }
+
+        if (this.transferService.isFrozen(player.getUniqueId())) {
+            enterEvent.setCancelled(true);
+
+            player.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Transfer freeze! " + ChatColor.DARK_RED + "[onVehicleEnter]"));
+        }
+    }
+
+    @EventHandler (priority = EventPriority.HIGHEST)
+    public void onVehicleExit(VehicleExitEvent exitEvent) {
+        if (!(exitEvent.getExited() instanceof Player player)) {
+            return;
+        }
+
+        if (this.transferService.isFrozen(player.getUniqueId())) {
+            exitEvent.setCancelled(true);
+
+            player.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Transfer freeze! " + ChatColor.DARK_RED + "[onVehicleExit]"));
         }
     }
 }

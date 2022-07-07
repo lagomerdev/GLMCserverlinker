@@ -1,5 +1,6 @@
 package pl.glmc.serverlinker.api.bungee;
 
+import pl.glmc.serverlinker.api.bungee.player.PlayerService;
 import pl.glmc.serverlinker.api.bungee.rtp.RandomTeleportService;
 import pl.glmc.serverlinker.api.bungee.sector.SectorManager;
 import pl.glmc.serverlinker.api.bungee.transfer.TransferHelper;
@@ -30,4 +31,10 @@ public interface GlmcTransferBungee {
      * @return
      */
     RandomTeleportService getRandomTeleportService();
+
+    /**
+     *
+     * @return
+     */
+    public PlayerService getPlayerService();
 }

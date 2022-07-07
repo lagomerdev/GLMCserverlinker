@@ -1,11 +1,8 @@
 package pl.glmc.serverlinker.api.bungee.rtp;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import pl.glmc.serverlinker.api.common.TransferAPI;
 import pl.glmc.serverlinker.api.common.TransferLocation;
-import pl.glmc.serverlinker.common.sector.SectorData;
 
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public interface RandomTeleportService {
@@ -24,5 +21,5 @@ public interface RandomTeleportService {
      * @param force
      * @return
      */
-    public CompletableFuture<TransferAPI.TransferResult> transferPlayerToRandomCoords(ProxiedPlayer player, String serverTarget, boolean force);
+    public CompletableFuture<Boolean> teleportPlayerToRandomCoords(ProxiedPlayer player, String serverTarget, boolean force);
 }

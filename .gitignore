@@ -8,3 +8,4 @@ dependency-reduced-pom.xml
 /serverlinker-bukkit/target/
 /serverlinker-bungee/target/
 /serverlinker-common/target/
+target

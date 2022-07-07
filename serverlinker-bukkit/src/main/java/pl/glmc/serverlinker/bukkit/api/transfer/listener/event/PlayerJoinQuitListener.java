@@ -6,6 +6,7 @@ import net.kyori.adventure.title.TitlePart;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -50,7 +51,7 @@ public class PlayerJoinQuitListener implements Listener {
         this.transferService.processJoin(player);
     }
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGHEST)
     public void onQuit(PlayerQuitEvent quitEvent) {
         this.transferService.processDisconnect(quitEvent.getPlayer());
     }

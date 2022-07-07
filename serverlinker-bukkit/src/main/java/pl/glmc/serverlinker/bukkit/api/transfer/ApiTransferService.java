@@ -65,6 +65,10 @@ public class ApiTransferService implements TransferService {
         Objects.requireNonNull(transferMetaData);
         Objects.requireNonNull(transferReason);
 
+        if (this.plugin.getGlmcAntylogout().hasActiveAntyLogout(playerUniqueId)) {
+            this.plugin.getGlmcAntylogout().removeFromAntyLogout(playerUniqueId);
+        }
+
         CompletableFuture<TransferAPI.TransferResult> result = new CompletableFuture<>();
 
         TransferRequest transferRequest = new TransferRequest(playerUniqueId, serverTarget, transferMetaData, transferReason, force);
@@ -138,6 +142,10 @@ public class ApiTransferService implements TransferService {
     }
 
     public void freezePlayer(UUID playerUniqueId) {
+        if (this.plugin.getGlmcAntylogout().hasActiveAntyLogout(playerUniqueId)) {
+            this.plugin.getGlmcAntylogout().removeFromAntyLogout(playerUniqueId);
+        }
+
         this.frozenPlayers.add(playerUniqueId);
     }
 

@@ -8,7 +8,7 @@ import pl.glmc.serverlinker.common.rtp.GetRandomCoordinatesResponse;
 public class GetRandomCoordinatesHandler extends ResponseHandlerListener<GetRandomCoordinatesResponse, TransferLocation> {
 
     public GetRandomCoordinatesHandler() {
-        super(LocalPacketRegistry.RandomTeleport.GET_RANDOM_COORDINATES_RESPONSE, GetRandomCoordinatesResponse.class);
+        super(LocalPacketRegistry.Teleport.GET_RANDOM_COORDINATES_RESPONSE, GetRandomCoordinatesResponse.class);
     }
 
     @Override

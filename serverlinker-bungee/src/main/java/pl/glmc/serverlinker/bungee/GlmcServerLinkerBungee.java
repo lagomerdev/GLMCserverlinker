@@ -9,6 +9,7 @@ import pl.glmc.api.bungee.database.DatabaseProvider;
 import pl.glmc.serverlinker.bungee.api.GlmcTransferProvider;
 import pl.glmc.serverlinker.bungee.cmd.RTPCmd;
 import pl.glmc.serverlinker.bungee.cmd.ServerCmd;
+import pl.glmc.serverlinker.bungee.cmd.TestCmd;
 import pl.glmc.serverlinker.bungee.conifg.ConfigProvider;
 
 public class GlmcServerLinkerBungee extends Plugin {
@@ -41,6 +42,7 @@ public class GlmcServerLinkerBungee extends Plugin {
 
         ServerCmd serverCommand = new ServerCmd(this);
         RTPCmd rtpCommand = new RTPCmd(this);
+        TestCmd testCmd = new TestCmd(this);
     }
 
     @Override

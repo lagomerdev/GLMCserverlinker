@@ -21,4 +21,13 @@ public class TransferLocation {
     public double getZ() {
         return z;
     }
+
+    @Override
+    public String toString() {
+        return "TransferLocation{" +
+                "x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                '}';
+    }
 }

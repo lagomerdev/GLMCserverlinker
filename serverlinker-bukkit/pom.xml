@@ -27,6 +27,10 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>nexus</id>
+            <url>http://ct201-nexus.lan:8081/repository/maven-public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -71,6 +75,13 @@
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>5.0.1</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>pl.glmc</groupId>
+            <artifactId>GLMCantylogout</artifactId>
+            <version>1.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

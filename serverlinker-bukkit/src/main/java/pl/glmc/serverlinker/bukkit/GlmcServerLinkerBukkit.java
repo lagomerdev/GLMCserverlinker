@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.glmc.api.bukkit.GlmcApiBukkit;
 import pl.glmc.api.bukkit.GlmcApiBukkitProvider;
 import pl.glmc.api.bukkit.database.DatabaseProvider;
+import pl.glmc.glmcantylogout.GLMCantylogout;
 import pl.glmc.serverlinker.bukkit.api.GlmcTransferProvider;
 import pl.glmc.serverlinker.bukkit.config.ConfigData;
 import pl.glmc.serverlinker.bukkit.config.ConfigProvider;
@@ -14,6 +15,7 @@ public class GlmcServerLinkerBukkit extends JavaPlugin {
 
     private GlmcTransferProvider glmcTransferProvider;
     private GlmcApiBukkit glmcApiBukkit;
+    private GLMCantylogout glmcAntylogout;
 
     private String rootDirectory;
     private Gson gson;
@@ -40,6 +42,8 @@ public class GlmcServerLinkerBukkit extends JavaPlugin {
         }
 
         this.glmcTransferProvider = new GlmcTransferProvider(this);
+
+        this.glmcAntylogout = GLMCantylogout.get();
     }
 
     @Override
@@ -71,6 +75,10 @@ public class GlmcServerLinkerBukkit extends JavaPlugin {
 
     public GlmcApiBukkit getGlmcApiBukkit() {
         return glmcApiBukkit;
+    }
+
+    public GLMCantylogout getGlmcAntylogout() {
+        return glmcAntylogout;
     }
 
     public Gson getGson() {

@@ -8,7 +8,7 @@ import pl.glmc.serverlinker.common.LocalPacketRegistry;
 import java.util.UUID;
 
 public class GetRandomCoordinatesResponse extends ResponsePacket {
-    private static final PacketInfo PACKET_INFO = LocalPacketRegistry.RandomTeleport.GET_RANDOM_COORDINATES_RESPONSE;
+    private static final PacketInfo PACKET_INFO = LocalPacketRegistry.Teleport.GET_RANDOM_COORDINATES_RESPONSE;
 
     private final TransferLocation transferLocation;
 

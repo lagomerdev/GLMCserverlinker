@@ -6,15 +6,12 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ServerConnectEvent;
 import pl.glmc.serverlinker.api.bungee.transfer.TransferService;
 import pl.glmc.serverlinker.api.common.TransferAPI;
-import pl.glmc.serverlinker.api.common.TransferLocation;
 import pl.glmc.serverlinker.api.common.TransferMetaData;
-import pl.glmc.serverlinker.api.common.TransferMetaKey;
 import pl.glmc.serverlinker.bungee.GlmcServerLinkerBungee;
 import pl.glmc.serverlinker.bungee.api.transfer.listener.packet.TransferApprovalHandler;
 import pl.glmc.serverlinker.bungee.api.transfer.listener.packet.TransferDataHandler;
 import pl.glmc.serverlinker.bungee.api.transfer.listener.packet.TransferRequestListener;
 import pl.glmc.serverlinker.common.TransferProperties;
-import pl.glmc.serverlinker.common.sector.SectorType;
 import pl.glmc.serverlinker.common.transfer.*;
 
 import java.util.HashMap;

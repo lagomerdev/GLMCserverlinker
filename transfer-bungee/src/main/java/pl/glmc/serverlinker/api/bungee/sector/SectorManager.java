@@ -1,7 +1,9 @@
 package pl.glmc.serverlinker.api.bungee.sector;
 
-import pl.glmc.serverlinker.common.sector.SectorData;
-import pl.glmc.serverlinker.common.sector.SectorType;
+import net.md_5.bungee.api.config.ServerInfo;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import pl.glmc.serverlinker.api.common.sector.SectorData;
+import pl.glmc.serverlinker.api.common.sector.SectorType;
 
 import java.util.Map;
 import java.util.Optional;
@@ -27,7 +29,16 @@ public interface SectorManager {
      * @param z
      * @return
      */
-    public boolean isIn(SectorData sector, double x, double z);
+    public boolean isInSector(SectorData sector, double x, double z);
+
+    /**
+     *
+     * @param sector
+     * @param x
+     * @param z
+     * @return
+     */
+    public boolean isInSectorType(SectorType sectorType, double x, double z);
 
     /**
      *
@@ -44,4 +55,25 @@ public interface SectorManager {
      * @return
      */
     public boolean isServerSector(String serverId);
+
+    /**
+     *
+     * @param player
+     * @return
+     */
+    public SectorData getSectorData(ProxiedPlayer player);
+
+    /**
+     *
+     * @param serverInfo
+     * @return
+     */
+    public SectorData getSectorData(ServerInfo serverInfo);
+
+    /**
+     *
+     * @param server
+     * @return
+     */
+    public SectorData getSectorData(String server);
 }

@@ -5,12 +5,9 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
-import pl.glmc.serverlinker.api.common.TransferAPI;
 import pl.glmc.serverlinker.bungee.GlmcServerLinkerBungee;
 
-import java.time.Duration;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 public class RTPCmd extends Command {
     private final GlmcServerLinkerBungee plugin;
@@ -33,17 +30,17 @@ public class RTPCmd extends Command {
 
         var sector = this.plugin.getGlmcTransferProvider().getSectorManager().getSectors().values()
                 .stream()
-                .filter(sectorData -> !sectorData.getId().equals(player.getServer().getInfo().getName()) && sectorData.getSectorType().getId().equals("world"))
-                .toList().get(new Random().nextInt(8));
+                .filter(sectorData -> sectorData.getSectorType().getId().equals("world"))
+                .toList().get(new Random().nextInt(9));
 
-        this.plugin.getGlmcTransferProvider().getRandomTeleportService().transferPlayerToRandomCoords(player, sector.getId(), true)
-                .thenAccept(transferResult -> {
-                    if (transferResult == TransferAPI.TransferResult.SUCCESS) {
-                        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Pomyślnie przeniesiono losowo na serwer " + ChatColor.DARK_GREEN
-                                + sector.getId() + ChatColor.GREEN + "!"));
+        this.plugin.getGlmcTransferProvider().getRandomTeleportService().teleportPlayerToRandomCoords(player, sector.getId(), true)
+                .thenAccept(success -> {
+                    if (success) {
+                        sender.sendMessage(TextComponent.fromLegacyText(ChatColor.GREEN + "Pomyślnie przeniesiono na losowe koordynaty! " + ChatColor.DARK_GREEN
+                                + "(" + sector.getId() + ") " + ChatColor.GREEN + "!"));
                     } else {
                         sender.sendMessage(TextComponent.fromLegacyText(ChatColor.RED + "Nie udalo sie znalezc odpowiedniej lokalizacji, sprobuj ponownie! " + ChatColor.DARK_RED
-                                + sector.getId() + ChatColor.RED + " (" + transferResult + ")!"));
+                                + sector.getId()));
                     }
                 });
     }

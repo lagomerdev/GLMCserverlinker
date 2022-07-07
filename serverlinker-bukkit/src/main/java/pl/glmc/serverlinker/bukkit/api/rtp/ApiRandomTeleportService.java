@@ -1,11 +1,11 @@
 package pl.glmc.serverlinker.bukkit.api.rtp;
 
 import org.bukkit.Material;
-import org.bukkit.block.Biome;
 import pl.glmc.serverlinker.api.bukkit.rtp.RandomTeleportService;
 import pl.glmc.serverlinker.api.common.TransferLocation;
 import pl.glmc.serverlinker.bukkit.GlmcServerLinkerBukkit;
 import pl.glmc.serverlinker.bukkit.api.rtp.packet.GetRandomCoordinatesListener;
+import pl.glmc.serverlinker.bukkit.api.rtp.packet.TeleportPlayerListener;
 import pl.glmc.serverlinker.bukkit.api.sector.ApiSectorManager;
 
 import java.util.concurrent.CompletableFuture;
@@ -18,6 +18,7 @@ public class ApiRandomTeleportService implements RandomTeleportService {
         this.plugin = plugin;
 
         var getRandomCoordinatesListener = new GetRandomCoordinatesListener(this.plugin, this);
+        var teleportPlayerListener = new TeleportPlayerListener(this.plugin);
     }
 
     public CompletableFuture<TransferLocation> getRandomCoords() {
